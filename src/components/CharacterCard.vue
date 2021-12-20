@@ -1,10 +1,10 @@
 <template>
   <div class="card" style="width: 18rem;">
-    <img src="{{ imageLink }}" class="card-img-top" alt="Feitan">
+    <img :src="imageLink" class="card-img-top" alt="Feitan">
     <div class="card-body">
       <h5 class="card-title">{{ name }}</h5>
       <p class="card-text">{{ quote }}</p>
-      <a href="{{ infoLink }}" class="btn btn-primary">More info</a>
+      <a :href="infoLink" class="btn btn-primary">More info</a>
     </div>
   </div>
 </template>
@@ -21,12 +21,14 @@ export default {
       imageLink: "https://cdn.myanimelist.net/images/characters/10/174721.jpg"
     };
   },
-  name: "HelloWorld",
+  name: "CharacterCard",
   props: {
     msg: String
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../assets/styles/scss/_card";
+
 </style>
