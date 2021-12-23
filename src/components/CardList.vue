@@ -7,8 +7,8 @@
     <!-- section Card list -->
     <CharacterCard v-for="character in filteredData" v-else
                    :key="character.name"
+                   v-model:is-favorite="character.isFavorite"
                    v-bind="character"
-                   @update:isFavorite="character.isFavorite = $event"
     />
 
     <!-- section Filter-->
@@ -183,7 +183,6 @@ export default {
     {
       if (this.currentFilterOption === "Favorite")
       {
-        console.log("this.currentFilterOption", this.currentFilterOption);
         return this.characters.filter(character => character.isFavorite);
       }
       return this.characters;

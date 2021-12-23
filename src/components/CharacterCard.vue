@@ -87,6 +87,7 @@
 <script>
 export default {
   props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions"],
+  emits: ["update:isFavorite"],
   // section Data
   /*
   *   ____        _
@@ -117,7 +118,7 @@ export default {
     {
       if (newVal !== oldVal)
       {
-        this.updateFavorite();
+        this.$emit("update:isFavorite", this.currentIsFavorite);
       }
     }
   },
@@ -130,12 +131,7 @@ export default {
   *  |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
   *
   */
-  methods: {
-    updateFavorite()
-    {
-      this.$emit("update:isFavorite", this.currentIsFavorite);
-    }
-  },
+  methods: {},
   // section Computed
   /*
   *    ____                            _           _
