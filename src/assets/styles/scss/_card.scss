@@ -1,3 +1,5 @@
+$custom-yellow: #F9D490;
+
 @mixin gradient-background($to: left, $left:#FFFFFF, $right:#FFEFBA) {
   background: $right; /* fallback for old browsers */
   background: -webkit-linear-gradient(to $to, $left, $right); /* Chrome 10-25, Safari 5.1-6 */
@@ -30,7 +32,23 @@
     top: 0;
 
     .btn-group {
+
+      .dropdown-item {
+        &.active, &:active {
+          text-decoration: none;
+          background-color: tint-color($custom-yellow, 10%);
+          color: $black;
+        }
+      }
+
       button {
+        text-transform: capitalize;
+      }
+
+      button.dropdown-toggle {
+        background-color: $custom-yellow;
+        color: $black;
+        border-color: shade-color($custom-yellow, 50%);
         min-width: 110px;
         display: flex;
         justify-content: space-between;

@@ -19,8 +19,12 @@
           {{ currentFilterOption }}
         </button>
         <ul aria-labelledby="dLabel" class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" @click.prevent="updateOption($event)">All</a></li>
-          <li><a class="dropdown-item" href="#" @click.prevent="updateOption($event)">Favorite</a></li>
+
+          <li v-for="option in filterOptions" :key="option">
+            <button :class="['dropdown-item', option === currentFilterOption.toLowerCase() ? 'active' : '']"
+                    @click="updateOption($event)">{{ option }}
+            </button>
+          </li>
         </ul>
       </div>
     </div>
@@ -166,7 +170,8 @@ export default {
           isFavorite: false
         }
       ],
-      currentFilterOption: "All"
+      currentFilterOption: "All",
+      filterOptions: ["all", "favorite"]
     };
   },
   //section Computed
