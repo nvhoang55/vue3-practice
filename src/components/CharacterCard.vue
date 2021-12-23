@@ -1,53 +1,83 @@
 <template>
-  <div :class="[ 'card', {favorite: currentFavorite} ]">
+  <div :class="[ 'card', {favorite: currentIsFavorite}]">
 
     <!-- section Image -->
-    <img :src="imageLink" alt="Feitan" class="card-img-top">
+    <img :src="imageLink" alt="avatar" class="card-img-top">
 
     <div class="card-body">
 
       <!-- section Name -->
       <h5 class="card-title">{{ name }}</h5>
 
-      <!-- section HP -->
-      <div class="hp">
-        <label class="form-label" for="hpRange">
-          <span v-if="currentHP > 0">
-            <span v-show="currentHP < hp/2">{{ name }} is low.</span>
-            HP: {{ currentHP }}</span>
+      <!-- section Positions -->
+      <div class="position">
+
+        <!--Year-->
+        <label class="form-label" for="positionRange">
+          <div v-if="year < bio.died.year">
+            <div>Year: {{ year }}</div>
+          </div>
           <span v-else>
             <i class="fas fa-skull"></i>
             <i class="fas fa-skull"></i>
             <i class="fas fa-skull"></i>
           </span>
         </label>
-        <input id="hpRange" v-model="currentHP" :max="hp" class="form-range" min="0" type="range">
-      </div>
 
-      <!-- section Strength -->
-      <div class="container--strength">
-        <h6>Strength</h6>
-        <button :class="['btn', btnStyle]" @click="decreaseStrength"><i class="bi bi-chevron-down"></i></button>
-        <div class="alert alert-dark strength" role="alert">
-          {{ currentStrength }}
+        <!--Year range input-->
+        <input id="positionRange" v-model="year" :max="bio.died.year" :min="bio.born.year" class="form-range"
+               type="range">
+
+        <!--Position-->
+        <div>Position:</div>
+        <span v-for="(pos, index) in position" :key="index" :class="['badge', 'bg-' + currentStyle]">
+          {{ pos }}
+        </span>
+
+      </div>
+    </div>
+
+    <!-- section Bio -->
+    <div class="bio">
+
+      <!--Tab-->
+      <ul id="bioTab" class="nav nav-tabs" role="tablist">
+        <li v-for="(bio, key, index) in bio" :key="key+'-tab'" class="nav-item" role="presentation">
+          <button :id="`${key}-${id}`+'-tab'"
+                  :aria-controls="`${key}-${id}`"
+                  :aria-selected="index === 0"
+                  :class="['nav-link', index === 0 ? 'active' : '']"
+                  :data-bs-target="'#'+`${key}-${id}`"
+                  data-bs-toggle="tab" role="tab" type="button">
+            {{ key }}
+          </button>
+        </li>
+      </ul>
+
+      <!--Tab content-->
+      <div id="myTabContent" class="tab-content">
+        <div v-for="(bio, key, index) in bio"
+             :id="`${key}-${id}`"
+             :key="key+'-content'"
+             :aria-labelledby="`${key}-${id}`+'-tab'"
+             :class="['tab-pane', 'fade', index === 0 ? 'show active' : '']"
+             role="tabpanel">
+          <ul class="list-group">
+            <li v-for="(data, key) in bio" :key="key" class="list-group-item">
+              <span>{{ key }}:</span>
+              <span>{{ data }}</span>
+            </li>
+          </ul>
         </div>
-        <button :class="['btn', btnStyle]" @click="increaseStrength"><i class="bi bi-chevron-up"></i></button>
       </div>
 
     </div>
-    <!-- section Bio -->
-    <ul class="list-group list-group-flush">
-      <li v-for="(value, key) in bio" :key="key" class="list-group-item">
-        <span class="key">{{ key }}:</span>
-        <span>{{ value }}</span>
-      </li>
-    </ul>
 
     <!-- section Bottom -->
     <div class="card__bottom">
-      <a :class="['btn', btnStyle]" :href="infoLink">More info</a>
+      <a :class="['btn', 'btn-' + currentStyle]" :href="infoLink">More info</a>
       <div class="form-check">
-        <input id="flexCheckDefault" v-model="currentFavorite" class="form-check-input" type="checkbox">
+        <input id="flexCheckDefault" v-model="currentIsFavorite" class="form-check-input" type="checkbox">
       </div>
     </div>
 
@@ -56,17 +86,34 @@
 
 <script>
 export default {
-  props: ["name", "strength", "hp", "bio", "infoLink", "imageLink", "favorite"],
+  props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions"],
+  // section Data
+  /*
+  *   ____        _
+  *  |  _ \  __ _| |_ __ _
+  *  | | | |/ _` | __/ _` |
+  *  | |_| | (_| | || (_| |
+  *  |____/ \__,_|\__\__,_|
+  *
+  */
   data()
   {
     return {
-      currentStrength: this.strength,
-      currentHP: this.hp,
-      currentFavorite: this.favorite
+      year: this.bio.born.year,
+      currentIsFavorite: this.isFavorite
     };
   },
+  // section Watch
+  /*
+  *  __        __    _       _
+  *  \ \      / /_ _| |_ ___| |__
+  *   \ \ /\ / / _` | __/ __| '_ \
+  *    \ V  V / (_| | || (__| | | |
+  *     \_/\_/ \__,_|\__\___|_| |_|
+  *
+  */
   watch: {
-    currentFavorite(oldVal, newVal)
+    currentIsFavorite(oldVal, newVal)
     {
       if (newVal !== oldVal)
       {
@@ -74,30 +121,53 @@ export default {
       }
     }
   },
+  // section Methods
+  /*
+  *   __  __      _   _               _
+  *  |  \/  | ___| |_| |__   ___   __| |___
+  *  | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
+  *  | |  | |  __/ |_| | | | (_) | (_| \__ \
+  *  |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
+  *
+  */
   methods: {
-    increaseStrength()
-    {
-      this.currentStrength += 10;
-    },
-    decreaseStrength()
-    {
-      this.currentStrength -= 10;
-    },
     updateFavorite()
     {
-      this.$emit("update:favorite", this.currentFavorite);
+      this.$emit("update:isFavorite", this.currentIsFavorite);
     }
   },
+  // section Computed
+  /*
+  *    ____                            _           _
+  *   / ___|___  _ __ ___  _ __  _   _| |_ ___  __| |
+  *  | |   / _ \| '_ ` _ \| '_ \| | | | __/ _ \/ _` |
+  *  | |__| (_) | | | | | | |_) | |_| | ||  __/ (_| |
+  *   \____\___/|_| |_| |_| .__/ \__,_|\__\___|\__,_|
+  *                       |_|
+  */
   computed: {
-    btnStyle()
+    currentStyle()
     {
-      return this.currentFavorite ? "btn-success" : "btn-dark";
+      return this.currentIsFavorite ? "success" : "dark";
+    },
+    position()
+    {
+      let currentPosition = [];
+      for (let position of this.positions)
+      {
+        if (this.year <= position.tenure[1] && this.year >= position.tenure[0])
+        {
+          currentPosition.push(position.name);
+        }
+      }
+      return currentPosition.length === 0 ? ["no position"] : currentPosition;
     }
   },
   name: "CharacterCard"
 };
 </script>
 
+// section Style
 <style lang="scss" scoped>
 
 </style>
