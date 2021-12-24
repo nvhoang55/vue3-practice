@@ -1,7 +1,8 @@
 import {createApp} from "vue";
 import App from "./App.vue";
-import "./helper.js";
-
+import router from "./router";
 import "bootstrap";
 
-createApp(App).mount("#app");
+import "./helper.js";
+
+createApp(App).use(router).mount("#app");

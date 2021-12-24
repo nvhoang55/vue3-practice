@@ -1,19 +1,19 @@
 <template>
-  <div class="cover">
-    <div class="container">
-      <CardList/>
-    </div>
+  <Navbar/>
+  <div style="margin-top: 20px">
+    <router-view/>
   </div>
+  <Footer/>
 </template>
 
 <script>
-import CardList from "./components/CardList";
+
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 export default {
   name: "App",
-  components: {
-    CardList
-  }
+  components: {Navbar, Footer}
 };
 </script>
 
@@ -24,29 +24,10 @@ export default {
 
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import "./assets/styles/scss/card";
 
 html, body {
   font-family: 'Hahmlet', serif;
-}
-
-body {
   background: url("./assets/images/map.png");
   background-size: cover
 }
-
-.cover {
-  height: 100%;
-  width: 100%;
-  background: #84080847;
-}
-
-.container {
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  place-items: center;
-}
-
-
 </style>
