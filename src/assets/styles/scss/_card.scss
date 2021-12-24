@@ -74,6 +74,8 @@ $custom-yellow: #F9D490;
   }
 
   .card-body {
+    padding: 1rem 0 0 0;
+
     .card-title {
       font-size: 1.5rem;
       font-weight: bold;
@@ -191,6 +193,7 @@ $custom-yellow: #F9D490;
   .card__bottom {
     display: flex;
     justify-content: space-between;
+    margin-top: 5px;
 
     .form-check-input {
       margin-left: -2em;

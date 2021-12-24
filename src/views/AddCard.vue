@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="form-container">
     <div class="card">
       <main class="form-signin">
         <form>
@@ -33,11 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  min-height: 100vh;
-  min-width: 100vw;
-  display: grid;
-  place-items: center;
+.form-container {
 
   .bd-placeholder-img {
     font-size: 1.125rem;

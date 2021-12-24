@@ -76,7 +76,9 @@
 
     <!-- section Bottom -->
     <div class="card__bottom">
-      <a :class="['btn', 'btn-' + currentStyle]" :href="infoLink">More info</a>
+      <router-link :class="['btn', 'btn-' + currentStyle]" :to="{ name: 'Detail', params: {id} }">
+        More Info
+      </router-link>
       <div class="form-check">
         <input id="flexCheckDefault" v-model="currentIsFavorite" class="form-check-input" type="checkbox">
       </div>

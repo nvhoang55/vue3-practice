@@ -1,9 +1,8 @@
 <template>
   <div class="cover">
-    <div class="container">
-      <CardList/>
-    </div>
   </div>
+  <div class="space"></div>
+  <CardList/>
 </template>
 
 <script>
@@ -18,15 +17,10 @@ export default {
 <style scoped>
 
 .cover {
-  height: 100%;
-  width: 100%;
+  position: fixed;
+  top: 0;
+  min-width: 100vw;
+  min-height: 100vh;
   background: #84080847;
-}
-
-.container {
-  height: 100vh;
-  width: 100vw;
-  display: grid;
-  place-items: center;
 }
 </style>

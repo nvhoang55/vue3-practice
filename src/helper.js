@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import bootstrap from "bootstrap";
 
 // Enable tooltips everywhere
-const tooltipTriggerList = [].slice.call(document.querySelectorAll("[data-bs-toggle=\"tooltip\"]"));
-const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl)
+var tooltipTriggerList = [].slice.call(document.querySelectorAll("[data-bs-toggle=\"tooltip\"]"));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl)
 {
+    // eslint-disable-next-line no-undef
     return new bootstrap.Tooltip(tooltipTriggerEl);
 });

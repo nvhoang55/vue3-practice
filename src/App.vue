@@ -1,6 +1,6 @@
 <template>
   <Navbar/>
-  <div style="margin-top: 20px">
+  <div class="container">
     <router-view/>
   </div>
   <Footer/>
@@ -28,6 +28,17 @@ export default {
 html, body {
   font-family: 'Hahmlet', serif;
   background: url("./assets/images/map.png");
-  background-size: cover
+  background-size: cover;
+
+}
+
+</style>
+
+<style lang="scss" scoped>
+.container {
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  place-items: center;
 }
 </style>
