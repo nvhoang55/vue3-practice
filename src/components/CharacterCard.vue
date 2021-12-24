@@ -14,14 +14,15 @@
 
         <!--Year-->
         <label class="form-label" for="positionRange">
-          <div v-if="year < bio.died.year">
-            <div>Year: {{ year }}</div>
-          </div>
-          <span v-else>
+          <span v-if="year == bio.died.year">
             <i class="fas fa-skull"></i>
             <i class="fas fa-skull"></i>
             <i class="fas fa-skull"></i>
           </span>
+          <div v-else>
+            <div><span v-show="year == bio.born.year">Born: </span>{{ year }}</div>
+          </div>
+
         </label>
 
         <!--Year range input-->
