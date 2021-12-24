@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import AllCard from "../views/AllCards";
 import AddCard from "../views/AddCard";
 import Detail from "../views/Detail";
+import NotFound from "@/views/NotFound";
 
 const routes = [
     //section Routes
@@ -39,8 +40,22 @@ const routes = [
     *
     */
     {
-        path: '/',
+        path: "/",
         redirect: "/all"
+    },
+    //section 404
+    /*
+    *   _  _    ___  _  _
+    *  | || |  / _ \| || |
+    *  | || |_| | | | || |_
+    *  |__   _| |_| |__   _|
+    *     |_|  \___/   |_|
+    *
+    */
+    {
+        path: "/:catchAll(.*)",
+        name: "404",
+        component: NotFound
     }
 ];
 

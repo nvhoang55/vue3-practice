@@ -14,7 +14,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 
 .cover {
   position: fixed;

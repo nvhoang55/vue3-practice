@@ -29,7 +29,6 @@ html, body {
   font-family: 'Hahmlet', serif;
   background: url("./assets/images/map.png");
   background-size: cover;
-
 }
 
 </style>
