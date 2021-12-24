@@ -1,28 +1,28 @@
 <template>
-  <div class="text-center">
-    <main class="form-signin">
-      <form>
-        <img alt="" class="mb-4" height="57" src="../assets/images/logo.png" width="72">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+  <div class="container">
+    <div class="card">
+      <main class="form-signin">
+        <form>
+          <h1 class="h3 mb-3 fw-normal">Enter your character info</h1>
 
-        <div class="form-floating">
-          <input id="floatingInput" class="form-control" placeholder="name@example.com" type="email">
-          <label for="floatingInput">Email address</label>
-        </div>
-        <div class="form-floating">
-          <input id="floatingPassword" class="form-control" placeholder="Password" type="password">
-          <label for="floatingPassword">Password</label>
-        </div>
+          <div class="form-floating">
+            <input id="floatingInput" class="form-control" placeholder="name@example.com" type="email">
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating">
+            <input id="floatingPassword" class="form-control" placeholder="Password" type="password">
+            <label for="floatingPassword">Password</label>
+          </div>
 
-        <div class="checkbox mb-3">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-      </form>
-    </main>
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="w-100 btn btn-lg btn-dark" type="submit">Add</button>
+        </form>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -32,59 +32,67 @@ export default {
 };
 </script>
 
-<style scoped>
-.bd-placeholder-img {
-  font-size: 1.125rem;
-  text-anchor: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
+<style lang="scss" scoped>
+.container {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: grid;
+  place-items: center;
 
-@media (min-width: 768px) {
-  .bd-placeholder-img-lg {
-    font-size: 3.5rem;
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
-}
 
-html,
-body {
-  height: 100%;
-}
+  .card {
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    min-width: 400px;
 
-.text-center {
-  display: flex;
-  align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #f5f5f5;
-}
+    .form-signin {
+      width: 100%;
+      padding: 15px;
+      margin: auto;
 
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
-}
+      .checkbox {
+        font-weight: 400;
+      }
 
-.form-signin .checkbox {
-  font-weight: 400;
-}
+      .form-floating {
+        &:focus-within {
+          z-index: 2;
+        }
+      }
 
-.form-signin .form-floating:focus-within {
-  z-index: 2;
-}
+      input {
+        color: black;
+      }
 
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
+      input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
 
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+      input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  }
+
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
 }
 
 </style>

@@ -3,12 +3,12 @@
     <div class="container">
       <header class="d-flex justify-content-center py-3">
         <ul class="nav nav-pills">
-          <li class="nav-item"><a aria-current="page" class="nav-link active" href="#">Home</a></li>
-          <!--<li class="nav-item"><a class="nav-link" href="#">All cards</a></li>-->
           <li class="nav-item">
-            <router-link class="nav-link" to="/all">All cards</router-link>
+            <router-link :to="{ name: 'AllCards'}" active-class="active" class="nav-link">All cards</router-link>
           </li>
-          <li class="nav-item"><a class="nav-link" href="#">Add a card</a></li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'AddCard'}" active-class="active" class="nav-link">Add a cards</router-link>
+          </li>
         </ul>
       </header>
     </div>

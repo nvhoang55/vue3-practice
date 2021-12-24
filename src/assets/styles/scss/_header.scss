@@ -32,6 +32,15 @@
   .nav-pills {
     .nav-link.active {
       background-color: $black;
+
+      &:focus {
+        color: whitesmoke;
+      }
+
+      &:hover {
+        background-color: $gray-600;
+        color: whitesmoke;
+      }
     }
   }
 

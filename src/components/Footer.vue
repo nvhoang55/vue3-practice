@@ -1,7 +1,7 @@
 <template>
   <footer class="footer mt-auto py-3 bg-dark bg-opacity-75">
     <div class="container text-center">
-      <span>Code Demo @Hoang</span>
+      <span>Code Demo @Hoang <br> &copy; 2021</span>
     </div>
   </footer>
 </template>
