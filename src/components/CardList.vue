@@ -1,7 +1,15 @@
 <template>
   <div class="container--cards">
 
-    <div v-if="filteredData.length === 0" class="no-favorite">
+    <!--Show loading if no data-->
+    <div v-if="characters.length === 0" class="lds-ring position-absolute start-50 translate-middle">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <!-- No favorite cards-->
+    <div v-else-if="filteredData.length === 0" class="no-favorite">
       <span>No favorite card</span>
     </div>
     <!-- section Card list -->
@@ -98,7 +106,6 @@ export default {
       {
         this.characters.push({id: doc.id, ...doc.data()});
       });
-      console.log("this.characters", this.characters);
     }
   },
   created()
@@ -108,6 +115,46 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.lds-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  top: 20%;
 
+  div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+  }
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>
