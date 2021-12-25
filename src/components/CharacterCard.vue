@@ -43,7 +43,7 @@
 
       <!--Tab-->
       <ul id="bioTab" class="nav nav-tabs" role="tablist">
-        <li v-for="(bio, key, index) in bio" :key="key+'-tab'" class="nav-item" role="presentation">
+        <li v-for="(bio, key, index) in orderedBio" :key="key+'-tab'" class="nav-item" role="presentation">
           <button :id="`${key}-${id}`+'-tab'"
                   :aria-controls="`${key}-${id}`"
                   :aria-selected="index === 0"
@@ -57,7 +57,7 @@
 
       <!--Tab content-->
       <div id="myTabContent" class="tab-content">
-        <div v-for="(bio, key, index) in bio"
+        <div v-for="(bio, key, index) in orderedBio"
              :id="`${key}-${id}`"
              :key="key+'-content'"
              :aria-labelledby="`${key}-${id}`+'-tab'"
@@ -76,7 +76,7 @@
 
     <!-- section Bottom -->
     <div class="card__bottom">
-      <router-link :class="['btn', 'btn-' + currentStyle]" :to="{ name: 'Detail', params: {id} }">
+      <router-link :class="['btn', 'btn-' + currentStyle]" :to="{ name: 'Detail', params: {slug} }">
         More Info
       </router-link>
       <div class="form-check">
@@ -88,8 +88,11 @@
 </template>
 
 <script>
+import {doc, updateDoc} from "firebase/firestore";
+
 export default {
-  props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions"],
+
+  props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions", "slug"],
   emits: ["update:isFavorite"],
   // section Data
   /*
@@ -121,7 +124,10 @@ export default {
     {
       if (newVal !== oldVal)
       {
+        //Update isFavorite in CardList
         this.$emit("update:isFavorite", this.currentIsFavorite);
+
+        this.updateDoc();
       }
     }
   },
@@ -134,7 +140,17 @@ export default {
   *  |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
   *
   */
-  methods: {},
+  methods: {
+    async updateDoc()
+    {
+      //Update isFavorite on Firebase
+      const dataDocumentReference = doc(db, "characters", this.id);
+
+      await updateDoc(dataDocumentReference, {
+        isFavorite: this.currentIsFavorite
+      });
+    }
+  },
   // section Computed
   /*
   *    ____                            _           _
@@ -145,6 +161,16 @@ export default {
   *                       |_|
   */
   computed: {
+    // Re-order data in bio since Firestore mess it up
+    orderedBio()
+    {
+      return {
+        born: this.bio.born,
+        died: this.bio.died,
+        burial: this.bio.burial,
+        house: this.bio.house
+      };
+    },
     currentStyle()
     {
       return this.currentIsFavorite ? "success" : "dark";

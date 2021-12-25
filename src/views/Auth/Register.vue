@@ -5,27 +5,20 @@
         <form>
           <h1 class="h3 mb-3 fw-normal">Enter your character info</h1>
 
-          <!--Name-->
           <div class="form-floating">
-            <input id="Name" class="form-control" placeholder="Name" type="text">
-            <label for="Name">Name</label>
+            <input id="floatingInput" class="form-control" placeholder="name@example.com" type="email">
+            <label for="floatingInput">Email address</label>
           </div>
-          <!--Image src-->
           <div class="form-floating">
-            <input id="Image source" class="form-control" placeholder="Name" type="text">
-            <label for="Image source">Image source</label>
-          </div>
-          <!--Position detail-->
-          <div class="input-group mb-3 mt-3">
-            <input aria-label="Username" class="form-control" placeholder="Position" type="text">
-            <span class="input-group-text">Start</span>
-            <input aria-label="Server" class="form-control" placeholder="Server" type="text">
-            <span class="input-group-text">End</span>
-            <input aria-label="Server" class="form-control" placeholder="Server" type="text">
-            <button id="button-addon2" class="btn btn-outline-secondary" type="button">+</button>
+            <input id="floatingPassword" class="form-control" placeholder="Password" type="password">
+            <label for="floatingPassword">Password</label>
           </div>
 
-
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
           <button class="w-100 btn btn-lg btn-dark" type="submit">Add</button>
         </form>
       </main>
@@ -35,7 +28,7 @@
 
 <script>
 export default {
-  name: "AddCard"
+  name: "Register"
 };
 </script>
 
@@ -55,15 +48,15 @@ export default {
     align-items: center;
     padding-top: 40px;
     padding-bottom: 40px;
-    min-width: 700px;
+    min-width: 400px;
 
     .form-add {
       width: 100%;
       padding: 15px;
       margin: auto;
 
-      button[type=submit] {
-        margin-top: 10px;
+      .checkbox {
+        font-weight: 400;
       }
 
       .form-floating {
@@ -74,10 +67,22 @@ export default {
 
       input {
         color: black;
-        background-color: rgba(255, 255, 255, 0.65);
+      }
+
+      input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
       }
     }
   }
+
 
   @media (min-width: 768px) {
     .bd-placeholder-img-lg {

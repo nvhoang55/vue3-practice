@@ -42,7 +42,6 @@
 
 <script>
 import CharacterCard from "./CharacterCard";
-import db from "../Firebase/setup";
 import {collection, getDocs} from "firebase/firestore";
 
 export default {

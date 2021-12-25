@@ -25,7 +25,7 @@ const routes = [
         component: AddCard
     },
     {
-        path: "/detail/:id",
+        path: "/detail/:slug",
         name: "Detail",
         component: Detail,
         props: true

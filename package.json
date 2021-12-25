@@ -29,9 +29,14 @@
     "sass-loader": "10"
   },
   "eslintConfig": {
+    "globals": {
+      "window.db": "readonly",
+      "window": true
+    },
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "browser": true
     },
     "extends": [
       "plugin:vue/vue3-essential",

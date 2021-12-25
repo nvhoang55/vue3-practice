@@ -2,7 +2,7 @@
   <div class="card">
     <div class="row">
       <div>Detail page</div>
-      <span>Character: {{ id }}</span>
+      <span>Character: {{ slug }}</span>
     </div>
     <router-link :to="{ name: 'AllChar'}" class="btn btn-dark back">Back</router-link>
   </div>
@@ -20,7 +20,7 @@ export default {
   *  |_|   |_|  \___/| .__/|___/
   *                  |_|
   */
-  props: ["id"]
+  props: ["slug"]
 };
 </script>
 
