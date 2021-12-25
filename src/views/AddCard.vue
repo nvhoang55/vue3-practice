@@ -6,27 +6,26 @@
           <h1 class="h3 mb-3 fw-normal">Enter your character info</h1>
 
           <!--Name-->
-          <div class="form-floating">
-            <input id="Name" class="form-control" placeholder="Name" type="text">
-            <label for="Name">Name</label>
+          <div class="input-group">
+            <input v-model="name" aria-label="Name" class="form-control" placeholder="Name" type="text">
+            <span class="input-group-text">Generated slug</span>
+            <input v-model="slug" aria-label="Server" class="form-control" placeholder="Slug" type="text">
           </div>
           <!--Image src-->
-          <div class="form-floating">
-            <input id="Image source" class="form-control" placeholder="Name" type="text">
-            <label for="Image source">Image source</label>
-          </div>
+          <input id="exampleFormControlInput1" class="form-control" placeholder="Image source" type="text">
           <!--Position detail-->
-          <div class="input-group mb-3 mt-3">
-            <input aria-label="Username" class="form-control" placeholder="Position" type="text">
+          <h3 class="h5 fw-normal mt-3 text-center">Position(s):</h3>
+          <div class="input-group">
+            <input aria-label="Position" class="form-control" placeholder="Position" type="text">
             <span class="input-group-text">Start</span>
-            <input aria-label="Server" class="form-control" placeholder="Server" type="text">
+            <input aria-label="Start" class="form-control" placeholder="Start" type="number">
             <span class="input-group-text">End</span>
-            <input aria-label="Server" class="form-control" placeholder="Server" type="text">
+            <input aria-label="End" class="form-control" placeholder="End" type="number">
             <button id="button-addon2" class="btn btn-outline-secondary" type="button">+</button>
           </div>
 
 
-          <button class="w-100 btn btn-lg btn-dark" type="submit">Add</button>
+          <button class="w-100 btn btn-lg btn-dark mt-5" type="submit">Add</button>
         </form>
       </main>
     </div>
@@ -34,8 +33,26 @@
 </template>
 
 <script>
+import {string_to_slug} from "../helper";
+
 export default {
-  name: "AddCard"
+  name: "AddCard",
+  data()
+  {
+    return {
+      name: "",
+      slug: ""
+    };
+  },
+  watch: {
+    name(oldVal, newVal)
+    {
+      if (oldVal !== newVal && this.name)
+      {
+        this.slug = string_to_slug(this.name);
+      }
+    }
+  }
 };
 </script>
 
@@ -55,7 +72,7 @@ export default {
     align-items: center;
     padding-top: 40px;
     padding-bottom: 40px;
-    min-width: 700px;
+    min-width: 600px;
 
     .form-add {
       width: 100%;
@@ -73,7 +90,6 @@ export default {
       }
 
       input {
-        color: black;
         background-color: rgba(255, 255, 255, 0.65);
       }
     }
