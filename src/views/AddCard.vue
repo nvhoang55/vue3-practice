@@ -20,7 +20,7 @@
 
           <!-- section Position detail-->
           <h3 class="h5 fw-normal mt-3 text-center">Position(s):</h3>
-          <div v-for="(item, index) in positionInputs" :key="index" class="input-group">
+          <div v-for="(item, index) in positions" :key="index" class="input-group">
             <input v-model="item.name" aria-label="Position" class="form-control" placeholder="Position"
                    type="text">
             <span class="input-group-text">Start year</span>
@@ -40,7 +40,7 @@
 
           <!-- section Bio-->
           <h3 class="h5 fw-normal mt-3 text-center">Bio:</h3>
-          <div v-for="(item, key) in bioInputs" :key="key" class="input-group bio">
+          <div v-for="(item, key) in bio" :key="key" class="input-group bio">
             <span class="input-group-text bg-dark text-white text-capitalize first">{{ key }}</span>
             <span class="input-group-text text-capitalize">{{ Object.keys(item)[0] }}</span>
             <input v-model="Object.values(item)[0]" :placeholder="Object.values(item)[0]" aria-label="Start"
@@ -69,6 +69,38 @@
 import slug from "slug";
 import {addDoc, collection} from "firebase/firestore";
 import Toast from "../components/Toast";
+import {array, boolean, number, object, string} from "yup";
+
+
+//Form validate schema
+let validateSchema = object({
+  name: string().required(),
+  slug: string().required(),
+  isFavorite: boolean().required(),
+  imageLink: string().required(),
+  positions: array().length(1).of(object({
+    name: string().required(),
+    tenure: array().of(number().positive().integer()).required()
+  })),
+  bio: object({
+    born: object({
+      year: number().positive().integer().required(),
+      place: string()
+    }).required(),
+    died: object({
+      year: number().positive().integer().required(),
+      place: string().required()
+    }).required(),
+    burial: object({
+      date: string(),
+      place: string()
+    }),
+    house: object({
+      farther: string(),
+      mother: string()
+    })
+  })
+});
 
 function initialData()
 {
@@ -77,11 +109,11 @@ function initialData()
     name: "",
     imageURL: "https://via.placeholder.com/150",
     slug: "",
-    positionInputs: [{
+    positions: [{
       name: "",
       tenure: []
     }],
-    bioInputs: {
+    bio: {
       born: {
         year: "",
         place: ""
@@ -116,6 +148,8 @@ export default {
   */
   data()
   {
+    // return validateSchema.default();
+    // return initialData();
     return initialData();
   },
   //section Watch
@@ -154,23 +188,38 @@ export default {
         slug: this.slug,
         isFavorite: false,
         imageLink: this.imageURL,
-        positions: this.positionInputs,
-        bio: this.bioInputs
+        positions: this.positions,
+        bio: this.bio
       };
-      try
-      {
-        // Add a new document with a generated id.
-        await addDoc(collection(db, "characters"), data);
-        this.$refs.toast.showToast(`Successfully added a new character ${data.name}!`);
-      }
-      catch (e)
-      {
-        this.$refs.toast.showToast(`${e}!`, "error");
-      }
+
+      //validate data
+      validateSchema.validate(data, {abortEarly: false})
+          .then(async data =>
+          {
+            // Add a new document with a generated id.
+            await addDoc(collection(db, "characters"), data);
+            this.$refs.toast.showToast(`Successfully added a new character ${data.name}!`);
+          })
+          .catch(error =>
+          {
+            console.log("data", data);
+            console.log(" error.name", error.name);
+            console.log("error", error.errors);
+          });
+      // try
+      // {
+      //   // Add a new document with a generated id.
+      //   await addDoc(collection(db, "characters"), data);
+      //   this.$refs.toast.showToast(`Successfully added a new character ${data.name}!`);
+      // }
+      // catch (e)
+      // {
+      //   this.$refs.toast.showToast(`${e}!`, "error");
+      // }
     },
     addPositionInput()
     {
-      this.positionInputs.push({
+      this.positions.push({
         name: "",
         tenure: []
       });
@@ -181,7 +230,7 @@ export default {
     },
     removePositionInput(index)
     {
-      this.positionInputs.splice(index, 1);
+      this.positions.splice(index, 1);
     },
     resetData()
     {
