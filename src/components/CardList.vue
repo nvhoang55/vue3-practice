@@ -2,12 +2,7 @@
   <div class="container--cards">
 
     <!--Show loading if no data-->
-    <div v-if="characters.length === 0" class="lds-ring position-absolute start-50 translate-middle">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
+    <Loader v-if="characters.length === 0" class="position-absolute start-50 translate-middle"/>
     <!-- No favorite cards-->
     <div v-else-if="filteredData.length === 0" class="no-favorite">
       <span>No favorite card</span>
@@ -43,10 +38,11 @@
 <script>
 import CharacterCard from "./CharacterCard";
 import {collection, getDocs} from "firebase/firestore";
+import Loader from "./Loader";
 
 export default {
   name: "CardList",
-  components: {CharacterCard},
+  components: {CharacterCard, Loader},
   //section Data
   /*
   *   ____        _
@@ -116,5 +112,4 @@ export default {
 
 <!-- section Styles -->
 <style lang="scss" scoped>
-@import "../assets/styles/scss/loader";
 </style>
