@@ -86,10 +86,20 @@
           </div>
 
           <!-- section Submit-->
-          <button :disabled="!meta.dirty || isSubmitting" class="w-100 btn btn-lg btn-dark mt-5" type="submit">
-            <Loader v-if="isSubmitting"/>
-            <span v-else>Add</span>
-          </button>
+          <!--<button :disabled="!meta.dirty || isSubmitting" class="w-100 btn btn-lg btn-dark mt-5" type="submit">-->
+          <!--  <Loader v-if="isSubmitting"/>-->
+          <!--  <span v-else>Add</span>-->
+          <!--</button>-->
+
+          <va-button :disabled="!meta.dirty || isSubmitting" :loading="isSubmitting" :rounded="false" block
+                     class="mt-3"
+                     color="dark"
+                     icon="add"
+                     type="submit"
+          >
+            Add
+          </va-button>
+
         </Form>
       </main>
     </div>
@@ -106,12 +116,11 @@ import slug from "slug";
 import Toast from "../components/Toast";
 import {configure, Field, Form} from "vee-validate";
 import {array, boolean, number, object, string} from "yup";
-import Loader from "../components/Loader";
 import {addDoc, collection} from "firebase/firestore";
 
 export default {
   name: "AddCard",
-  components: {Toast, Form, Field, Loader},
+  components: {Toast, Form, Field},
   setup()
   {
     configure({

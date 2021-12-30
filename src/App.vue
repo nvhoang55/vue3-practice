@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./assets/styles/normalize.css";
+//@import "./assets/styles/normalize.css";
 @import './assets/styles/scss/custom';
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 
