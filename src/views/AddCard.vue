@@ -3,21 +3,28 @@
   <div class="form-container">
     <div class="card mb-5">
       <main class="form-add">
-        <Form v-slot="{ errors, meta }" :initial-values="initialData" :validation-schema="validateSchema"
-              @submit.prevent="handleSubmit">
+        <Form v-slot="{ errors, meta, isSubmitting  }" :initial-values="initialData" :validation-schema="validateSchema"
+              @submit="onSubmit">
           <h1 class="h3 mb-3 fw-normal">Enter your character detail</h1>
+
+          <div v-for="(message, field) in errors" :key="field" class="text-danger">
+            <span>{{ field }}: </span><span>{{ message }}</span>
+          </div>
+
 
           <!-- section Name-->
           <div class="input-group">
-            <Field v-model="name" :class="['form-control', errors.name && 'error']"
-                   :placeholder="errors.name ?? 'Name'"
+            <Field v-model="name" :class="['form-control', (errors.name) && 'error']"
+                   :placeholder="(errors.name) ?? 'Name'"
+                   :set="showError = errors.name"
                    aria-label="Name"
                    name="name" type="text"/>
           </div>
 
           <!-- section Image src-->
-          <Field v-model="imageURL" :class="['form-control', errors.imageURL && 'error']"
-                 :placeholder="errors.imageURL ?? 'Image source'"
+          <Field v-model="imageURL"
+                 :class="['form-control', (errors.imageURL) && 'error']"
+                 :placeholder="(errors.imageURL) ?? 'Image source'"
                  name="imageURL" type="url"/>
           <div class="justify-content-center d-flex">
             <img :src="imageURL" alt="avatar" class="img-thumbnail mt-2" height="150" width="auto">
@@ -26,26 +33,29 @@
           <!-- section Position detail-->
           <h3 class="h5 fw-normal mt-3 text-center">Position(s):</h3>
           <div v-for="(item, index) in positions" :key="index" class="input-group">
-            <Field :class="['form-control', errors[`positions[${index}].name`] && 'error']"
-                   :name="`positions[${index}].name`"
-                   :placeholder="errors[`positions[${index}].name`] ?? 'Position'"
-                   aria-label="Position"
-                   type="text"/>
+            <Field
+                :class="['form-control', errors[`positions[${index}].name`] && 'error']"
+                :name="`positions[${index}].name`"
+                :placeholder="errors[`positions[${index}].name`] ?? 'Position'"
+                aria-label="Position"
+                type="text"/>
             <span class="input-group-text">Start year</span>
-            <Field :class="['form-control', errors[`positions[${index}].tenure[0]`] && 'error']"
-                   :name="`positions[${index}].tenure[0]`"
-                   :placeholder="errors[`positions[${index}].tenure[0]`] ?? 'Start year'"
-                   aria-label="Start year"
-                   min="1"
-                   type="number"
+            <Field
+                :class="['form-control', (errors[`positions[${index}].tenure[0]`]) && 'error']"
+                :name="`positions[${index}].tenure[0]`"
+                :placeholder="errors[`positions[${index}].tenure[0]`] ?? 'Start year'"
+                aria-label="Start year"
+                min="1"
+                type="number"
             />
             <span class="input-group-text">End year</span>
-            <Field :class="['form-control', errors[`positions[${index}].tenure[1]`] && 'error']"
-                   :name="`positions[${index}].tenure[1]`"
-                   :placeholder="errors[`positions[${index}].tenure[1]`] ?? 'End year'"
-                   aria-label="End year"
-                   min="1"
-                   type="number"/>
+            <Field
+                :class="['form-control',(errors[`positions[${index}].tenure[1]`]) && 'error']"
+                :name="`positions[${index}].tenure[1]`"
+                :placeholder="(errors[`positions[${index}].tenure[1]`]) ?? 'End year'"
+                aria-label="End year"
+                min="1"
+                type="number"/>
 
             <button v-if="index === 0" class="btn btn-outline-success" type="button" @click="addPositionInput">
               <i class="far fa-plus"></i>
@@ -74,7 +84,10 @@
           </div>
 
           <!-- section Submit-->
-          <button :disabled="!meta.dirty" class="w-100 btn btn-lg btn-dark mt-5" type="submit">Add</button>
+          <button :disabled="!meta.dirty || isSubmitting" class="w-100 btn btn-lg btn-dark mt-5" type="submit">
+            <Loader v-if="isSubmitting"/>
+            <span v-else>Add</span>
+          </button>
         </Form>
       </main>
     </div>
@@ -88,41 +101,38 @@
 <!-- section Script-->
 <script>
 import slug from "slug";
-import {addDoc, collection} from "firebase/firestore";
 import Toast from "../components/Toast";
-import {array, boolean, number, object, string} from "yup";
 import {Field, Form} from "vee-validate";
+import {array, boolean, number, object, ref, string} from "yup";
+import Loader from "../components/Loader";
 
 export default {
   name: "AddCard",
-  components: {Toast, Form, Field},
-  //section Data
-  /*
-  *   ____        _
-  *  |  _ \  __ _| |_ __ _
-  *  | | | |/ _` | __/ _` |
-  *  | |_| | (_| | || (_| |
-  *  |____/ \__,_|\__\__,_|
-  *
-  */
-  data()
+  components: {Toast, Form, Field, Loader},
+  setup()
   {
-    //Form validate schema
     const validateSchema = object({
       name: string().required("Name is required"),
       isFavorite: boolean().required(),
       imageURL: string().required("An image URL is required"),
       positions: array().length(1).of(object({
         name: string().required("Required"),
-        tenure: array().of(number("Must be a number").positive("Must > 0").integer("Must be a number").required("Required"))
+        tenure: array().of(number().typeError("Must be a number").positive("Must > 0").integer().required("Required"))
       })).required(),
       bio: object({
         born: object({
-          year: number().typeError("Must be a number").positive("Must > 0").integer("Must be a number").required("Required"),
+          year: number()
+              .typeError("Must be a number")
+              .positive("Must > 0").integer()
+              .required("Required"),
           place: string()
         }),
         died: object({
-          year: number().typeError("Must be a number").positive("Must > 0").integer("Must be a number").required("Required"),
+          year: number()
+              .typeError("Must be a number")
+              .positive("Must > 0").integer()
+              .required("Required")
+              .moreThan(ref("bio.born.year")),
           place: string()
         }),
         burial: object({
@@ -135,6 +145,20 @@ export default {
         })
       })
     });
+    return {validateSchema};
+  },
+  //section Data
+  /*
+  *   ____        _
+  *  |  _ \  __ _| |_ __ _
+  *  | | | |/ _` | __/ _` |
+  *  | |_| | (_| | || (_| |
+  *  |____/ \__,_|\__\__,_|
+  *
+  */
+  data()
+  {
+    //Form validate schema
     const initialData = {
       isFavorite: "false",
       name: "",
@@ -167,8 +191,7 @@ export default {
     return {
       toastMessage: "",
       initialData,
-      ...initialData,
-      validateSchema
+      ...initialData
     };
   },
   //section Computed
@@ -180,10 +203,7 @@ export default {
   *   \____\___/|_| |_| |_| .__/ \__,_|\__\___|\__,_|
   *                       |_|
   */
-  computed: {
-    //For debug
-    console: () => console
-  },
+  computed: {},
   //section Watch
   /*
   *  __        __    _       _
@@ -212,18 +232,10 @@ export default {
   *
   */
   methods: {
-    async addNewDoc()
+    async addNewDoc(values)
     {
       //Add data to Firestore
-      const data = {
-        name: this.name,
-        slug: this.slug,
-        isFavorite: false,
-        imageLink: this.imageURL,
-        positions: this.positions,
-        bio: this.bio
-      };
-
+      console.log("values", values);
       //validate data
       // validateSchema.validate(data, {abortEarly: false})
       //     .then(async data =>
@@ -238,16 +250,16 @@ export default {
       //       console.log(" error.name", error.name);
       //       console.log("error", error.errors);
       //     });
-      try
-      {
-        // Add a new document with a generated id.
-        await addDoc(collection(db, "characters"), data);
-        this.$refs.toast.showToast(`Successfully added a new character ${data.name}!`);
-      }
-      catch (e)
-      {
-        this.$refs.toast.showToast(`${e}!`, "error");
-      }
+      // try
+      // {
+      //   // Add a new document with a generated id.
+      //   await addDoc(collection(db, "characters"), data);
+      //   this.$refs.toast.showToast(`Successfully added a new character ${data.name}!`);
+      // }
+      // catch (e)
+      // {
+      //   this.$refs.toast.showToast(`${e}!`, "error");
+      // }
     },
     addPositionInput()
     {
@@ -256,17 +268,15 @@ export default {
         tenure: []
       });
     },
-    handleSubmit()
+    onSubmit(values)
     {
-      this.addNewDoc();
+      values.slug = this.slug;
+      console.log("values", values);
+      // this.addNewDoc(values);
     },
     removePositionInput(index)
     {
       this.positions.splice(index, 1);
-    },
-    resetData()
-    {
-      Object.assign(this.$data, this.initialData);
     }
   }
 };
