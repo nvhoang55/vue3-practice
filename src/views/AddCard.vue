@@ -85,12 +85,6 @@
                    type="text"/>
           </div>
 
-          <!-- section Submit-->
-          <!--<button :disabled="!meta.dirty || isSubmitting" class="w-100 btn btn-lg btn-dark mt-5" type="submit">-->
-          <!--  <Loader v-if="isSubmitting"/>-->
-          <!--  <span v-else>Add</span>-->
-          <!--</button>-->
-
           <va-button :disabled="!meta.dirty || isSubmitting" :loading="isSubmitting" :rounded="false" block
                      class="mt-3"
                      color="dark"
@@ -114,7 +108,7 @@
 <script>
 import slug from "slug";
 import Toast from "../components/Toast";
-import {configure, Field, Form} from "vee-validate";
+import {Field, Form} from "vee-validate";
 import {array, boolean, number, object, string} from "yup";
 import {addDoc, collection} from "firebase/firestore";
 
@@ -123,13 +117,6 @@ export default {
   components: {Toast, Form, Field},
   setup()
   {
-    configure({
-      validateOnBlur: true, // controls if `blur` events should trigger validation with `handleChange` handler
-      validateOnChange: false, // controls if `change` events should trigger validation with `handleChange` handler
-      validateOnInput: false, // controls if `input` events should trigger validation with `handleChange` handler
-      validateOnModelUpdate: true // controls if `update:modelValue` events should trigger validation with `handleChange` handler
-    });
-
     //section Schema
     const validateSchema = object({
       name: string().required().label("Name"),
@@ -259,16 +246,27 @@ export default {
   methods: {
     async addNewDoc(values)
     {
-      try
-      {
-        // Add a new document with a generated id.
-        await addDoc(collection(db, "characters"), values);
-        this.$refs.toast.showToast(`Successfully added a new character ${values.name}!`);
-      }
-      catch (e)
-      {
-        this.$refs.toast.showToast(`${e}!`, "error");
-      }
+      // Add a new document with a generated id.
+      await addDoc(collection(db, "characters"), values)
+          .then(() =>
+          {
+            this.$refs.toast.showToast(`Successfully added a new character "${values.name}"!`);
+
+          })
+          .catch(e =>
+          {
+            this.$refs.toast.showToast(`Successfully added a new character ${e}!`);
+
+          });
+      // try
+      // {
+      //   const docRef = await addDoc(collection(db, "characters"), values);
+      //   this.$refs.toast.showToast(`Successfully added a new character ${docRef.data().name}!`);
+      // }
+      // catch (e)
+      // {
+      //   this.$refs.toast.showToast(`Successfully added a new character ${e}!`);
+      // }
     },
     addPositionInput()
     {
@@ -280,7 +278,6 @@ export default {
     onSubmit(values, {resetField})
     {
       values.slug = this.slug;
-      console.log("values", values);
 
       this.addNewDoc(values);
       resetField();

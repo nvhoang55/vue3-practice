@@ -22,9 +22,6 @@ export default {
 @import './assets/styles/scss/custom';
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
 html, body {
   font-family: 'Hahmlet', serif;
   background: url("./assets/images/map.png");

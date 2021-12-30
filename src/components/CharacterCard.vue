@@ -76,6 +76,7 @@
 
     <!-- section Bottom -->
     <div class="card__bottom">
+      <va-button color="danger" icon="delete" @click="remove">Remove</va-button>
       <router-link :class="['btn', 'btn-' + currentStyle]" :to="{ name: 'Detail', params: {slug} }">
         More Info
       </router-link>
@@ -84,16 +85,22 @@
       </div>
     </div>
 
+    <!--  Hidden button use for display Vuestic toast message-->
+    <va-button ref="toast" class="d-none" @click="$vaToast.init({ message: toastMessage, color: toastColor })">
+      Hidden
+    </va-button>
+
+
   </div>
 </template>
 
 <script>
-import {doc, updateDoc} from "firebase/firestore";
+import {deleteDoc, doc, updateDoc} from "firebase/firestore";
 
 export default {
 
   props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions", "slug"],
-  emits: ["update:isFavorite"],
+  emits: ["update:isFavorite", "reFetchData"],
   // section Data
   /*
   *   ____        _
@@ -106,6 +113,8 @@ export default {
   data()
   {
     return {
+      toastMessage: "",
+      toastColor: "success",
       year: this.bio.born.year,
       currentIsFavorite: this.isFavorite
     };
@@ -141,6 +150,16 @@ export default {
   *
   */
   methods: {
+    async remove()
+    {
+      await deleteDoc(doc(db, "characters", this.id))
+          .then(() =>
+          {
+            this.$emit("reFetchData");
+            this.toastMessage = `Removed ${this.name}`;
+            this.$refs.toast.click();
+          });
+    },
     async updateDoc()
     {
       //Update isFavorite on Firebase
