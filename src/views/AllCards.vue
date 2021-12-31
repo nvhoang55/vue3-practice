@@ -8,21 +8,21 @@ const store = useStore();
 //section Data
 const cardOnOnePage = 3;
 const currentPage = ref(1);
-const totalPages = ref(1);
 
 //section Computed
+const totalPages = computed(() => Math.ceil(store.state.allCharacters.length / cardOnOnePage));
+
 const charactersOnPage = computed(() =>
 {
   const start = (currentPage.value - 1) * cardOnOnePage;
   const end = currentPage.value * cardOnOnePage;
-  console.log("this.$store", store);
   return store.state.allCharacters.slice(start, end);
 });
 
 // section Mounted
-onMounted(() =>
+onMounted(async () =>
 {
-  store.dispatch("fetchCharacters");
+  await store.dispatch("fetchCharacters");
 });
 
 </script>

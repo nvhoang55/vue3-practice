@@ -134,10 +134,10 @@ export default {
     async remove()
     {
       await deleteDoc(doc(db, "characters", this.id))
-          .then(() =>
+          .then(async () =>
           {
             //Re-fetch data
-            this.$store.commit("fetchCharacters");
+            await this.$store.dispatch("fetchCharacters");
 
             // Display toast message
             this.toastMessage = `Removed ${this.name}`;
