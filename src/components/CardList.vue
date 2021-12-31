@@ -2,7 +2,7 @@
   <div class="container--cards">
 
     <!--Show loading if no data-->
-    <Loader v-if="currentCharacters.length === 0" class="position-absolute start-50 translate-middle"/>
+    <Loader v-if="$store.state.loading" class="position-absolute start-50 translate-middle"/>
     <!-- No favorite cards-->
     <div v-else-if="filteredData.length === 0" class="no-favorite">
       <span>No favorite card</span>
@@ -12,7 +12,6 @@
                    :key="character.name"
                    v-model:is-favorite="character.isFavorite"
                    v-bind="character"
-                   @re-fetch-data="fetchData"
     />
 
     <!-- section Filter-->
@@ -26,7 +25,6 @@
 
 <script>
 import CharacterCard from "./CharacterCard";
-import {collection, getDocs} from "firebase/firestore";
 import Loader from "./Loader";
 
 export default {
@@ -58,25 +56,7 @@ export default {
     updateOption(e)
     {
       this.currentFilterOption = e.target.innerText;
-    },
-    async fetchData()
-    {
-      await getDocs(collection(db, "characters"))
-          .then(querySnapshot =>
-          {
-            //Remove old data in case re-fetching
-            this.characters = [];
-            querySnapshot.forEach((doc) =>
-            {
-              this.characters.push({id: doc.id, ...doc.data()});
-            });
-          })
-          .catch(e => console.log(e));
     }
-  },
-  mounted()
-  {
-    // this.fetchData();
   }
 };
 </script>

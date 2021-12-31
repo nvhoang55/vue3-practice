@@ -11,11 +11,17 @@ import "./helper.js";
 import {VuesticPlugin} from "vuestic-ui";
 import "vuestic-ui/dist/vuestic-ui.css";
 import "./assets/styles/vuestic-override.css";
+//Vuex
+import store from "./store";
 
-createApp(App).use(router).use(VuesticPlugin, {
-    components: {
-        VaButton: {
-            rounded: false
+createApp(App)
+    .use(router)
+    .use(VuesticPlugin, {
+        components: {
+            VaButton: {
+                rounded: false
+            }
         }
-    }
-}).mount("#app");
+    })
+    .use(store)
+    .mount("#app");

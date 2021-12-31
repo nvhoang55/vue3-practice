@@ -104,7 +104,7 @@ import {doc, updateDoc, deleteDoc} from "firebase/firestore";
 export default {
 
   props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions", "slug"],
-  emits: ["update:isFavorite", "reFetchData"],
+  emits: ["update:isFavorite"],
   // section Data
   data()
   {
@@ -136,8 +136,10 @@ export default {
       await deleteDoc(doc(db, "characters", this.id))
           .then(() =>
           {
-            console.log("removed");
-            this.$emit("reFetchData");
+            //Re-fetch data
+            this.$store.commit("fetchCharacters");
+
+            // Display toast message
             this.toastMessage = `Removed ${this.name}`;
             this.$refs.toast.click();
           })

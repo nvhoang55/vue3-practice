@@ -1,38 +1,28 @@
 <script setup>
 import CardList from "../components/CardList";
-import {computed, onBeforeMount, ref} from "vue";
-import {collection, getDocs} from "firebase/firestore";
+import {computed, onMounted, ref} from "vue";
+import {useStore} from "vuex";
+
+const store = useStore();
 
 //section Data
 const cardOnOnePage = 3;
 const currentPage = ref(1);
 const totalPages = ref(1);
-const totalCharacters = ref([]);
 
 //section Computed
 const charactersOnPage = computed(() =>
 {
   const start = (currentPage.value - 1) * cardOnOnePage;
   const end = currentPage.value * cardOnOnePage;
-  return totalCharacters.value.slice(start, end);
+  console.log("this.$store", store);
+  return store.state.allCharacters.slice(start, end);
 });
 
 // section Mounted
-onBeforeMount(async () =>
+onMounted(() =>
 {
-  //Fetch data from firebase on mount
-  await getDocs(collection(db, "characters"))
-      .then(querySnapshot =>
-      {
-        //Remove old data in case re-fetching
-        querySnapshot.forEach((doc) =>
-        {
-          totalCharacters.value.push({id: doc.id, ...doc.data()});
-        });
-        //Calculate total page
-        totalPages.value = Math.ceil(totalCharacters.value.length / cardOnOnePage);
-      })
-      .catch(e => console.log(e));
+  store.dispatch("fetchCharacters");
 });
 
 </script>
