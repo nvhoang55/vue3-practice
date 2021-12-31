@@ -2,7 +2,7 @@
   <div class="container--cards">
 
     <!--Show loading if no data-->
-    <Loader v-if="characters.length === 0" class="position-absolute start-50 translate-middle"/>
+    <Loader v-if="currentCharacters.length === 0" class="position-absolute start-50 translate-middle"/>
     <!-- No favorite cards-->
     <div v-else-if="filteredData.length === 0" class="no-favorite">
       <span>No favorite card</span>
@@ -17,20 +17,8 @@
 
     <!-- section Filter-->
     <div class="filter">
-      <div class="btn-group">
-        <button id="dLabel" aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
-                type="button">
-          {{ currentFilterOption }}
-        </button>
-        <ul aria-labelledby="dLabel" class="dropdown-menu">
-
-          <li v-for="option in filterOptions" :key="option">
-            <button :class="['dropdown-item', option === currentFilterOption.toLowerCase() ? 'active' : '']"
-                    @click="updateOption($event)">{{ option }}
-            </button>
-          </li>
-        </ul>
-      </div>
+      <va-switch v-model="showFavorites" color="danger" false-inner-label="All"
+                 style="min-width: 110px" true-inner-label="Favorite"/>
     </div>
 
   </div>
@@ -44,52 +32,28 @@ import Loader from "./Loader";
 export default {
   name: "CardList",
   components: {CharacterCard, Loader},
+  //section Props
+  props: ["currentCharacters"],
   //section Data
-  /*
-  *   ____        _
-  *  |  _ \  __ _| |_ __ _
-  *  | | | |/ _` | __/ _` |
-  *  | |_| | (_| | || (_| |
-  *  |____/ \__,_|\__\__,_|
-  *
-  */
-
   data()
   {
     return {
-      characters: [],
-      currentFilterOption: "All",
-      filterOptions: ["all", "favorite"]
+      characters: this.currentCharacters,
+      showFavorites: false
     };
   },
   //section Computed
-  /*
-  *    ____                            _           _
-  *   / ___|___  _ __ ___  _ __  _   _| |_ ___  __| |
-  *  | |   / _ \| '_ ` _ \| '_ \| | | | __/ _ \/ _` |
-  *  | |__| (_) | | | | | | |_) | |_| | ||  __/ (_| |
-  *   \____\___/|_| |_| |_| .__/ \__,_|\__\___|\__,_|
-  *                       |_|
-  */
   computed: {
     filteredData()
     {
-      if (this.currentFilterOption === "Favorite")
+      if (this.showFavorites)
       {
-        return this.characters.filter(character => character.isFavorite);
+        return this.currentCharacters.filter(character => character.isFavorite);
       }
-      return this.characters;
+      return this.currentCharacters;
     }
   },
   //section Methods
-  /*
-  *   __  __      _   _               _
-  *  |  \/  | ___| |_| |__   ___   __| |___
-  *  | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
-  *  | |  | |  __/ |_| | | | (_) | (_| \__ \
-  *  |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
-  *
-  */
   methods: {
     updateOption(e)
     {
@@ -112,7 +76,7 @@ export default {
   },
   mounted()
   {
-    this.fetchData();
+    // this.fetchData();
   }
 };
 </script>

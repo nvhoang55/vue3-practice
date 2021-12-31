@@ -76,7 +76,11 @@
 
     <!-- section Bottom -->
     <div class="card__bottom">
-      <va-button color="danger" icon="delete" @click="remove">Remove</va-button>
+      <!--Remove button + modal-->
+      <va-button color="danger" icon="delete" @click="showRemoveModal = !showRemoveModal">Remove</va-button>
+      <va-modal v-model="showRemoveModal" color="danger" message="Confirm to remove this character?" ok-text="Remove"
+                size="small" title="Remove confirmation" @ok="remove"/>
+
       <router-link :class="['btn', 'btn-' + currentStyle]" :to="{ name: 'Detail', params: {slug} }">
         More Info
       </router-link>
@@ -95,24 +99,17 @@
 </template>
 
 <script>
-import {deleteDoc, doc, updateDoc} from "firebase/firestore";
+import {doc, updateDoc, deleteDoc} from "firebase/firestore";
 
 export default {
 
   props: ["id", "name", "bio", "infoLink", "imageLink", "isFavorite", "positions", "slug"],
   emits: ["update:isFavorite", "reFetchData"],
   // section Data
-  /*
-  *   ____        _
-  *  |  _ \  __ _| |_ __ _
-  *  | | | |/ _` | __/ _` |
-  *  | |_| | (_| | || (_| |
-  *  |____/ \__,_|\__\__,_|
-  *
-  */
   data()
   {
     return {
+      showRemoveModal: false,
       toastMessage: "",
       toastColor: "success",
       year: this.bio.born.year,
@@ -120,14 +117,6 @@ export default {
     };
   },
   // section Watch
-  /*
-  *  __        __    _       _
-  *  \ \      / /_ _| |_ ___| |__
-  *   \ \ /\ / / _` | __/ __| '_ \
-  *    \ V  V / (_| | || (__| | | |
-  *     \_/\_/ \__,_|\__\___|_| |_|
-  *
-  */
   watch: {
     currentIsFavorite(oldVal, newVal)
     {
@@ -141,44 +130,30 @@ export default {
     }
   },
   // section Methods
-  /*
-  *   __  __      _   _               _
-  *  |  \/  | ___| |_| |__   ___   __| |___
-  *  | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
-  *  | |  | |  __/ |_| | | | (_) | (_| \__ \
-  *  |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
-  *
-  */
   methods: {
     async remove()
     {
       await deleteDoc(doc(db, "characters", this.id))
           .then(() =>
           {
+            console.log("removed");
             this.$emit("reFetchData");
             this.toastMessage = `Removed ${this.name}`;
             this.$refs.toast.click();
-          });
+          })
+          .catch(e => console.log(e));
     },
     async updateDoc()
     {
       //Update isFavorite on Firebase
-      const dataDocumentReference = doc(db, "characters", this.id);
+      const docRef = doc(db, "characters", this.id);
 
-      await updateDoc(dataDocumentReference, {
+      await updateDoc(docRef, {
         isFavorite: this.currentIsFavorite
       });
     }
   },
   // section Computed
-  /*
-  *    ____                            _           _
-  *   / ___|___  _ __ ___  _ __  _   _| |_ ___  __| |
-  *  | |   / _ \| '_ ` _ \| '_ \| | | | __/ _ \/ _` |
-  *  | |__| (_) | | | | | | |_) | |_| | ||  __/ (_| |
-  *   \____\___/|_| |_| |_| .__/ \__,_|\__\___|\__,_|
-  *                       |_|
-  */
   computed: {
     // Re-order data in bio since Firestore mess it up
     orderedBio()
