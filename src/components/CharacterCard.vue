@@ -137,7 +137,7 @@ export default {
           .then(async () =>
           {
             //Re-fetch data
-            await this.$store.dispatch("fetchCharacters");
+            await this.$store.dispatch("characters/fetchCharacters");
 
             // Display toast message
             this.toastMessage = `Removed ${this.name}`;

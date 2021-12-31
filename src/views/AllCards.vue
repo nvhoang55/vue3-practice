@@ -10,19 +10,19 @@ const cardOnOnePage = 3;
 const currentPage = ref(1);
 
 //section Computed
-const totalPages = computed(() => Math.ceil(store.state.allCharacters.length / cardOnOnePage));
+const totalPages = computed(() => Math.ceil(store.state.characters.allCharacters.length / cardOnOnePage));
 
 const charactersOnPage = computed(() =>
 {
   const start = (currentPage.value - 1) * cardOnOnePage;
   const end = currentPage.value * cardOnOnePage;
-  return store.state.allCharacters.slice(start, end);
+  return store.state.characters.allCharacters.slice(start, end);
 });
 
 // section Mounted
 onMounted(async () =>
 {
-  await store.dispatch("fetchCharacters");
+  await store.dispatch("characters/fetchCharacters");
 });
 
 </script>
